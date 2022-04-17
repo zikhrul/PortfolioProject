@@ -140,18 +140,3 @@ Join [Portfolio Project]..CovidVaccinations$ vac
 
 Select *, (RollingPeopleVaccinated/Population)*100
 From #PercentPopulationVaccinated
-
-
-
-
--- Creating View to store data for later visualizations
-
-Create View PercentPopulationVaccinated as
-Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
---, (RollingPeopleVaccinated/population)*100
-From [Portfolio Project]..CovidDeaths$ dea
-Join [Portfolio Project]..CovidVaccinations$ vac
-	On dea.location = vac.location
-	and dea.date = vac.date
-where dea.continent is not null 
